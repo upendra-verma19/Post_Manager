@@ -58,7 +58,7 @@ export default function PostCard2({
         ) : (
           <h3 className="card-title">{title}</h3>
         )}
-        {body && body.length > 120 && <span className="badge">Long</span>}
+        {/* {body && body.length > 120 && <span className="badge">Long</span>} */}
       </div>
 
       {editing ? (
