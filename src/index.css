@@ -1,7 +1,7 @@
 :root {
   --bg: #f5f7fb;
   --card: #ffffff;
-  --accent: #2563eb;
+  --accent: #b4e969ff;
   --muted: #6b7280;
 }
 
@@ -17,7 +17,7 @@ body,
 }
 body {
   background: var(--bg);
-  padding: 20px;
+  padding: 20px 20px 80px; /* extra bottom space so pagination isn't flush to viewport */
 }
 
 .app {
@@ -29,6 +29,61 @@ body {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
+}
+.header-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.search-wrap {
+  display: flex;
+  gap: 15px; /* add spacing between the input and Clear button */
+  align-items: center;
+}
+.search-input {
+  padding: 8px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px; /* fully rounded when separated from Clear button */
+  width: 220px;
+  max-width: 40vw;
+  height: 40px;
+  box-sizing: border-box;
+  flex: 1;
+}
+
+/* Hover / focus zoom for search input (accessible) */
+.search-input {
+  transform-origin: center;
+  will-change: transform, background-color, color, box-shadow;
+  transition: transform 180ms cubic-bezier(0.2, 0.9, 0.2, 1),
+    background-color 180ms ease, box-shadow 180ms ease, color 180ms ease;
+  outline: none;
+}
+
+.search-input:hover,
+.search-input:active,
+.search-input:focus-visible {
+  background: #b4e969ff; /* hover/focus background */
+  color: #ffffff;
+  transform: scale(1.12);
+  z-index: 12;
+  box-shadow: 0 8px 20px rgba(16, 24, 40, 0.12);
+}
+
+.search-input:focus-visible {
+  box-shadow: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .search-input {
+    transition: background-color 150ms ease, color 150ms ease;
+  }
+  .search-input:hover,
+  .search-input:active,
+  .search-input:focus-visible {
+    transform: none;
+    box-shadow: none;
+  }
 }
 .center {
   display: flex;
@@ -53,15 +108,16 @@ body {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
   display: flex;
   flex-direction: column;
-}
-.card.highlight {
+  position: relative;
   border-left: 4px solid var(--accent);
 }
+/* .card.highlight is no longer needed since every card shows the accent line */
 .card-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
+  padding-right: 44px; /* leave space for absolute-positioned badge */
 }
 .card-title {
   font-size: 14px;
@@ -74,6 +130,13 @@ body {
   padding: 2px 6px;
   border-radius: 999px;
   font-size: 12px;
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 .card-body {
   margin: 10px 0;
@@ -105,12 +168,30 @@ body {
 .card textarea {
   resize: vertical;
 }
+.card {
+  min-width: 0;
+}
+
+.card-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.card-add-form {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
 .pagination-wrap {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-top: 16px;
   gap: 12px;
+  margin-bottom: 48px; /* add space below page numbers */
 }
 .pagination-info {
   color: var(--muted);
@@ -140,4 +221,105 @@ body {
 
 .page-button {
   cursor: pointer;
+}
+
+.page-button,
+.a11y-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  min-height: 40px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  color: #111827;
+  font-size: 13px;
+  transform-origin: center;
+  will-change: transform, box-shadow, background-color;
+  transition: transform 180ms cubic-bezier(0.2, 0.9, 0.2, 1),
+    background-color 180ms ease, box-shadow 180ms ease;
+  outline: none;
+}
+
+.page-button.search-clear {
+  height: 40px;
+  padding: 0 12px;
+  border-radius: 6px; /* fully rounded now that the controls are separated */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Hover, active, and keyboard focus-visible state */
+.page-button:hover,
+.page-button:active,
+.page-button:focus-visible,
+.a11y-button:hover,
+.a11y-button:active,
+.a11y-button:focus-visible {
+  background: #b4e969ff; /* requested hover/focus background */
+  color: #262829ff;
+  transform: scale(1.2); /* 20% scale */
+  z-index: 10;
+  box-shadow: 0 8px 20px rgba(16, 24, 40, 0.12);
+}
+
+/* Strong visible keyboard focus ring (shown only to keyboard users via :focus-visible) */
+.page-button:focus-visible,
+.a11y-button:focus-visible {
+  box-shadow: none;
+}
+
+/* Disabled state should remain accessible */
+.page-button:disabled,
+.a11y-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Respect reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .page-button,
+  .a11y-button {
+    transition: background-color 150ms ease;
+  }
+  .page-button:hover,
+  .page-button:active,
+  .page-button:focus-visible,
+  .a11y-button:hover,
+  .a11y-button:active,
+  .a11y-button:focus-visible {
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .pagination-wrap {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* Make sure action buttons and inputs wrap properly at very large zoom / small viewport */
+@media (max-width: 420px) {
+  .card-actions {
+    gap: 6px;
+  }
+  .page-button {
+    padding: 6px 8px;
+    font-size: 13px;
+  }
 }

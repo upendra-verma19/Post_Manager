@@ -24,3 +24,8 @@ Disable marks a post as disabled, greying it out and disabling actions except En
 Add After allows you to insert a new post directly after the current one.
 
 You can also add a new post at the top using the Add New Post option.
+
+Search:
+
+- Use the search box in the header to filter cards by title (case-insensitive).
+- Pagination updates to the filtered results and the search can be cleared with the "Clear" button next to the input.

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export default function PostCard({
+export default function PostCard2({
   id,
   title,
   body,
@@ -73,75 +73,63 @@ export default function PostCard({
         <p className="card-body muted">(body hidden)</p>
       )}
 
-      <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
+      <div className="card-actions">
         {disabled ? (
           <button className="page-button" onClick={toggleDisable}>
             Enable
           </button>
+        ) : editing ? (
+          <>
+            <button className="page-button" onClick={save}>
+              Save
+            </button>
+            <button
+              className="page-button"
+              onClick={() => {
+                setEditing(false);
+                setEditTitle(title);
+                setEditBody(body);
+              }}
+            >
+              Cancel
+            </button>
+          </>
         ) : (
           <>
-            {editing ? (
-              <>
-                <button className="page-button" onClick={save}>
-                  Save
-                </button>
-                <button
-                  className="page-button"
-                  onClick={() => {
-                    setEditing(false);
-                    setEditTitle(title);
-                    setEditBody(body);
-                  }}
-                >
-                  Cancel
-                </button>
-              </>
-            ) : (
-              <>
-                <button
-                  className="page-button"
-                  onClick={() => {
-                    setEditing(true);
-                    setEditTitle(title);
-                    setEditBody(body);
-                  }}
-                  disabled={disabled}
-                >
-                  Edit
-                </button>
-                <button
-                  className="page-button"
-                  onClick={remove}
-                  disabled={disabled}
-                >
-                  Delete
-                </button>
-                <button className="page-button" onClick={toggleDisable}>
-                  {disabled ? 'Enable' : 'Disable'}
-                </button>
-                <button
-                  className="page-button"
-                  onClick={() => setAdding((s) => !s)}
-                  disabled={disabled}
-                >
-                  {adding ? 'Close' : 'Add after'}
-                </button>
-              </>
-            )}
+            <button
+              className="page-button"
+              onClick={() => {
+                setEditing(true);
+                setEditTitle(title);
+                setEditBody(body);
+              }}
+              disabled={disabled}
+            >
+              Edit
+            </button>
+            <button
+              className="page-button"
+              onClick={remove}
+              disabled={disabled}
+            >
+              Delete
+            </button>
+            <button className="page-button" onClick={toggleDisable}>
+              {disabled ? 'Enable' : 'Disable'}
+            </button>
+            <button
+              className="page-button"
+              onClick={() => setAdding((s) => !s)}
+              disabled={disabled}
+            >
+              {adding ? 'Close' : 'Add after'}
+            </button>
           </>
         )}
       </div>
 
       {adding && (
-        <form
-          onSubmit={submitAdd}
-          style={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 6,
-          }}
-        >
+        <form onSubmit={submitAdd} className="card-add-form">
           <input
             placeholder="Title"
             value={addTitle}
@@ -153,7 +141,7 @@ export default function PostCard({
             onChange={(e) => setAddBody(e.target.value)}
             rows={3}
           />
-          <div style={{ display: 'flex', gap: 8 }}>
+          <div className="card-actions">
             <button type="submit" className="page-button">
               Add
             </button>

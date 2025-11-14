@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import PostCard from './components/PostCard';
+import PostCard from './components/PostCard2';
 
 function AddNewForm({ onAdd }) {
   const [title, setTitle] = useState('');
@@ -58,6 +58,7 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showBody, setShowBody] = useState(true);
+  const [search, setSearch] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
 
@@ -91,11 +92,17 @@ export default function App() {
   if (loading) return <div className="center">Loading posts...</div>;
   if (error) return <div className="center error">Error: {error}</div>;
 
-  const total = posts.length;
+  // filter posts by search term (case-insensitive)
+  const searchTerm = search.trim().toLowerCase();
+  const filtered = searchTerm
+    ? posts.filter((p) => (p.title || '').toLowerCase().includes(searchTerm))
+    : posts;
+
+  const total = filtered.length;
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = Math.min(total, currentPage * pageSize);
-  const visible = posts.slice(startIndex, endIndex);
+  const visible = filtered.slice(startIndex, endIndex);
 
   function clampPage(p, totalCount) {
     const pages = Math.max(1, Math.ceil(totalCount / pageSize));
@@ -157,8 +164,30 @@ export default function App() {
     <div className="app">
       <header className="header">
         <h1>Posts</h1>
-        <div>
-          <label>
+        <div className="header-controls">
+          <div className="search-wrap">
+            <input
+              className="search-input"
+              placeholder="Search title..."
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setCurrentPage(1);
+              }}
+            />
+            <button
+              className="page-button search-clear"
+              onClick={() => {
+                setSearch('');
+                setCurrentPage(1);
+              }}
+              title="Clear search"
+            >
+              Clear
+            </button>
+          </div>
+
+          <label style={{ marginLeft: 12 }}>
             <input
               type="checkbox"
               checked={showBody}
